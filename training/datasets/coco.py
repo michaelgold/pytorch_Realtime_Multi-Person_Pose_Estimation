@@ -24,20 +24,22 @@ def get_loader(json_path, data_dir, mask_dir, inp_size, feat_stride, preprocess,
         data = data_this['root']
 
     num_samples = len(data)
-    train_indexes = []
-    val_indexes = []
-    for count in range(num_samples):
-        if data[count]['isValidation'] != 0.:
-            val_indexes.append(count)
-        else:
-            train_indexes.append(count)
+    # train_indexes = []
+    # val_indexes = []
+    # for count in range(num_samples):
+    #     if data[count]['isValidation'] != 0.:
+    #         val_indexes.append(count)
+    #     else:
+    #         train_indexes.append(count)
+    #
+    # coco_data = Cocokeypoints(root=data_dir, mask_dir=mask_dir,
+    #                           index_list=train_indexes if training else val_indexes,
+    #                           data=data, inp_size=inp_size, feat_stride=feat_stride,
+    #                           preprocess=preprocess, transform=ToTensor(), params_transform=params_transform)
+    #
+    # data_loader = sDataLoader(coco_data, batch_size=batch_size,
+    #                           shuffle=shuffle, num_workers=num_workers)
 
-    coco_data = Cocokeypoints(root=data_dir, mask_dir=mask_dir,
-                              index_list=train_indexes if training else val_indexes,
-                              data=data, inp_size=inp_size, feat_stride=feat_stride,
-                              preprocess=preprocess, transform=ToTensor(), params_transform=params_transform)
-
-    data_loader = sDataLoader(coco_data, batch_size=batch_size,
-                              shuffle=shuffle, num_workers=num_workers)
+    print(num_samples)
 
     return data_loader
