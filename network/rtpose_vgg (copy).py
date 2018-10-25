@@ -35,31 +35,6 @@ def make_stages(cfg_dict):
     layers += [conv2d]
     return nn.Sequential(*layers)
 
-def make_res(cfg_dict):
-    """Builds CPM stages from a dictionary
-    Args:
-        cfg_dict: a dictionary
-    """
-    layers = []
-    for i in range(len(cfg_dict) - 1):
-        one_ = cfg_dict[i]
-        for k, v in one_.items():
-            if 'pool' in k:
-                layers += [nn.MaxPool2d(kernel_size=v[0], stride=v[1],
-                                        padding=v[2])]
-            else:
-                conv2d = nn.Conv2d(in_channels=v[0], out_channels=v[1],
-                                   kernel_size=v[2], stride=v[3],
-                                   padding=v[4])
-                layers += [conv2d, nn.ReLU(inplace=True)]
-    one_ = list(cfg_dict[-1].keys())
-    k = one_[0]
-    v = cfg_dict[-1][k]
-    conv2d = nn.Conv2d(in_channels=v[0], out_channels=v[1],
-                       kernel_size=v[2], stride=v[3], padding=v[4])
-    layers += [conv2d]
-    return nn.Sequential(*layers)
-
 
 def make_vgg19_block(block):
     """Builds a vgg19 block from a dictionary
@@ -121,15 +96,13 @@ def get_model(trunk='vgg19'):
                           {'conv5_2_CPM_L1': [128, 128, 3, 1, 1]},
                           {'conv5_3_CPM_L1': [128, 128, 3, 1, 1]},
                           {'conv5_4_CPM_L1': [128, 512, 1, 1, 0]},
-                          {'conv5_5_CPM_L1': [512, 256, 1, 1, 0]},
-                          {'conv5_6_CPM_L1': [256, 38, 1, 1, 0]}]
+                          {'conv5_5_CPM_L1': [512, 38, 1, 1, 0]}]
 
     blocks['block1_2'] = [{'conv5_1_CPM_L2': [128, 128, 3, 1, 1]},
                           {'conv5_2_CPM_L2': [128, 128, 3, 1, 1]},
                           {'conv5_3_CPM_L2': [128, 128, 3, 1, 1]},
                           {'conv5_4_CPM_L2': [128, 512, 1, 1, 0]},
-                          {'conv5_5_CPM_L2': [512, 256, 1, 1, 0]},
-                          {'conv5_6_CPM_L2': [512, 19, 1, 1, 0]}]
+                          {'conv5_5_CPM_L2': [512, 19, 1, 1, 0]}]
 
     # Stages 2 - 6
     for i in range(2, 7):
@@ -160,10 +133,7 @@ def get_model(trunk='vgg19'):
         models['block0'] = make_vgg19_block(block0)
 
     for k, v in blocks.items():
-        if 'Mconv6' in v:
-            models[k] = make_res(list(v))
-        else:
-            models[k] = make_stages(list(v))
+        models[k] = make_stages(list(v))
 
     class rtpose_model(nn.Module):
         def __init__(self, model_dict):
