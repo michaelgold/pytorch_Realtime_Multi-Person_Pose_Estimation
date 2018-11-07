@@ -15,7 +15,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from collections import OrderedDict
 from scipy.ndimage.filters import gaussian_filter
-from network.rtpose_vgg import get_model
+from network.rtpose_vgg import get_model, use_vgg
 from network.post import decode_pose
 from training.datasets.coco_data.preprocessing import (inception_preprocess,
                                               rtpose_preprocess,
@@ -24,17 +24,17 @@ from network import im_transform
 from evaluate.coco_eval import get_multiplier, get_outputs, handle_paf_and_heat
 
 
-# weight_name = 'network/weight/best_pose.pth'
-weight_name = 'network/weight/pose_model.pth'
-model = get_model('vgg19')     
-model.load_state_dict(torch.load(weight_name))
+weight_name = 'network/weight/best_pose.pth'
+# weight_name = 'network/weight/pose_model.pth'
+model = get_model(trunk='vgg19')     
 model = torch.nn.DataParallel(model).cuda()
+model.load_state_dict(torch.load(weight_name))
 model.float()
 model.eval()
+model = model.cuda()
 
 
-
-test_image = 'photo.jpg'
+test_image = 'kids.jpg'
 oriImg = cv2.imread(test_image) # B,G,R order
 shape_dst = np.min(oriImg.shape[0:2])
 
@@ -43,12 +43,12 @@ multiplier = get_multiplier(oriImg)
 
 with torch.no_grad():
     orig_paf, orig_heat = get_outputs(
-        multiplier, oriImg, model,  'rtpose')
+        multiplier, oriImg, model,  'vgg')
           
     # Get results of flipped image
     swapped_img = oriImg[:, ::-1, :]
     flipped_paf, flipped_heat = get_outputs(multiplier, swapped_img,
-                                            model, 'rtpose')
+                                            model, 'vgg')
 
     # compute averaged heatmap and paf
     paf, heatmap = handle_paf_and_heat(

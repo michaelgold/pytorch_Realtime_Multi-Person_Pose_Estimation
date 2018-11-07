@@ -50,12 +50,17 @@ def eval_coco(outputs, dataDir, imgIds):
         json.dump(outputs, f)  
     annType = 'keypoints'
     prefix = 'person_keypoints'
+    print(outputs)
 
     # initialize COCO ground truth api
     dataType = 'val2014'
     annFile = '%s/annotations/%s_%s.json' % (dataDir, prefix, dataType)
     cocoGt = COCO(annFile)  # load annotations
+    print(annFile)
     cocoDt = cocoGt.loadRes('results.json')  # load model outputs
+    print("loaded model outputs")
+    print(cocoDt)
+
 
     # running evaluation
     cocoEval = COCOeval(cocoGt, cocoDt, annType)
