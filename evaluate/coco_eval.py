@@ -50,7 +50,7 @@ def eval_coco(outputs, dataDir, imgIds):
         json.dump(outputs, f)  
     annType = 'keypoints'
     prefix = 'person_keypoints'
-    print(outputs)
+    # print(outputs)
 
     # initialize COCO ground truth api
     dataType = 'val2014'

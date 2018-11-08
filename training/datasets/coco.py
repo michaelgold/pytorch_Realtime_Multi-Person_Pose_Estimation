@@ -23,8 +23,8 @@ def get_loader(json_path, data_dir, mask_dir, inp_size, feat_stride, preprocess,
         data_this = json.load(data_file)
         data = data_this['root']
 
-    # num_samples = len(data)
-    num_samples = 100
+    num_samples = len(data)
+    # num_samples = 10000
     print(num_samples)
     train_indexes = []
     val_indexes = []

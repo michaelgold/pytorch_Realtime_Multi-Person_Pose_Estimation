@@ -16,19 +16,19 @@ from training.datasets.coco import get_loader
 
 # Hyper-params
 parser = argparse.ArgumentParser(description='PyTorch rtpose Training')
-parser.add_argument('--data_dir', default='/data/coco/images', type=str, metavar='DIR',
+parser.add_argument('--data_dir', default='./data/coco/images/', type=str, metavar='DIR',
                     help='path to where coco images stored') 
-parser.add_argument('--mask_dir', default='/data/coco/', type=str, metavar='DIR',
+parser.add_argument('--mask_dir', default='./data/coco/images/', type=str, metavar='DIR',
                     help='path to where coco images stored')    
 parser.add_argument('--logdir', default='/extra/tensorboy', type=str, metavar='DIR',
                     help='path to where tensorboard log restore')                                       
-parser.add_argument('--json_path', default='/data/coco/COCO.json', type=str, metavar='PATH',
+parser.add_argument('--json_path', default='./data/coco/COCO.json', type=str, metavar='PATH',
                     help='path to where coco images stored')                                      
 
 parser.add_argument('--model_path', default='./network/weight/', type=str, metavar='DIR',
                     help='path to where the model saved') 
                     
-parser.add_argument('--lr', '--learning-rate', default=1., type=float,
+parser.add_argument('--lr', '--learning-rate', default=0.001, type=float,
                     metavar='LR', help='initial learning rate')
 
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
@@ -37,7 +37,7 @@ parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
 parser.add_argument('--epochs', default=200, type=int, metavar='N',
                     help='number of total epochs to run')
                     
-parser.add_argument('--weight-decay', '--wd', default=0.000, type=float,
+parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                     metavar='W', help='weight decay (default: 1e-4)')  
 parser.add_argument('--nesterov', dest='nesterov', action='store_true')     
                                                    
